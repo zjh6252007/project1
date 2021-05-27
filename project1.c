@@ -47,11 +47,72 @@ int main(void)
     {
       // 01 – LIT 0, M Pushes a constant value (literal) M onto the stack
       case 1:
-        sp = sp + 1;
+        sp++;
         pas[sp] = ir.m;
         break;
       // 02 – OPR 0, M Operation to be performed on the data at the top of the stack.
       case 2:
+        switch(ir.m)
+        {
+           case 0:
+             sp = bp - 1;
+             pc = pas[sp + 3];
+             bp = pas[sp + 2];
+             break;
+           case 1:
+             pas[sp] = -pas[sp];
+             break;
+           case 2:
+             sp --;
+             pas[sp] += pas[sp + 1];
+             break;
+           case 3:
+             sp --;
+             pas[sp] -= pas[sp + 1];
+             break;
+           case 4:
+             sp --;
+             pas[sp] *= pas[sp + 1];
+             break;
+           case 5:
+             sp --;
+             pas[sp] /= pas[sp + 1];
+             break;
+           case 6:
+            pas[sp] = pas[sp] % 2;
+            break;
+           case 7:
+             sp --;
+             pas[sp] %= pas[sp + 1];
+             break;
+           case 8:
+             sp --;
+             pas[sp] = pas[sp] == pas[sp + 1];
+             break;
+           case 9:
+             sp --;
+             pas[sp] = pas[sp] != pas[sp + 1];
+             break;
+           case 10:
+             sp --;
+             pas[sp] = pas[sp] < pas[sp + 1];
+             break;
+           case 11:
+             sp --;
+             pas[sp] = pas[sp] <= pas[sp + 1];
+             break;
+           case 12:
+             sp --;
+             pas[sp] = pas[sp] > pas[sp + 1];
+             break;
+           case 13:
+             sp --;
+             pas[sp] = pas[sp] >= pas[sp + 1];
+             break;
+           dafalut:
+             printf("Wrong M!\n");
+             return 0;
+        }
         break;
       // 03 – LOD L, M Load value to top of stack from the stack location at
       // set M from L lexicographical levels down
