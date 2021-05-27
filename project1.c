@@ -51,6 +51,42 @@ int main(void)
         pas[sp] = ir.m;
         break;
       // 02 – OPR 0, M Operation to be performed on the data at the top of the stack.
+      case 2:
+        switch(ir.m)
+        {
+          case 0:
+            sp = bp - 1;
+            pc = pas[sp + 3];
+            bp = pas[sp + 2];
+          case 1:
+            pas[sp] = -1*pas[sp];
+          case 2:
+            sp --;
+            pas[sp] = pas[sp] + pas[sp + 1];
+          case 3:
+            sp --;
+            pas[sp] = pas[sp] - pas[sp + 1];
+          case 4:
+            sp --;
+            pas[sp] *= pas[sp + 1];
+          case 5:
+            sp --;
+            pas[sp] /= pas[sp + 1];
+          case 6:
+          case 7:
+            sp --;
+            pas[sp] %= pas[sp + 1];
+          case 8:
+            sp --;
+            
+          case 9:
+          case 10:
+          case 11:
+          case 12:
+          case 13:
+            
+            
+        }
       // 03 – LOD L, M Load value to top of stack from the stack location at
       // set M from L lexicographical levels down
       // 04 – STO L, M Store value at top of stack in the stack location at offset M
