@@ -183,7 +183,7 @@ int base(int L)
   while (L > 0) //find base L levels down
   {
     /** BUG here "base" */
-    arb = pas[bp];
+    arb = pas[arb];
     L--;
   }
 
