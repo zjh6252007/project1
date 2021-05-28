@@ -16,7 +16,7 @@ char name[3];
 // Path array.
 int pas[MAX_PAS_LEN] = {-1};
 
-int base(int L);
+int base(int L, int bp);
 
 int main(void)
 {
@@ -48,9 +48,9 @@ printf("    %d    %d   %d\n",pc,bp,sp);
     pc += 3;
     stack += (sp - old_sp);
     old_sp = sp;
-    for(int i = 0 ; i < stack ; i++) 
+    for(int i = 0 ; i < stack ; i++)
     {
-      printf("   %d ",pas[bp + i]);// print the stack, debugging 
+      printf("   %d ",pas[bp + i]);
     }
     printf("\n");
     // Execute
@@ -67,57 +67,71 @@ printf("    %d    %d   %d\n",pc,bp,sp);
         switch(m)
         {
            case 0:
+             strcpy(name,"RTN");
              sp = bp - 1;
              pc = pas[sp + 3];
              bp = pas[sp + 2];
              break;
            case 1:
+             strcpy(name,"NEG");
              pas[sp] = -pas[sp];
              break;
            case 2:
+             strcpy(name,"ADD");
              sp --;
              pas[sp] += pas[sp + 1];
              break;
            case 3:
+             strcpy(name,"SUB");
              sp --;
              pas[sp] -= pas[sp + 1];
              break;
            case 4:
+             strcpy(name,"MUL");
              sp --;
              pas[sp] *= pas[sp + 1];
              break;
            case 5:
+             strcpy(name,"DIV");
              sp --;
              pas[sp] /= pas[sp + 1];
              break;
            case 6:
+             strcpy(name,"ODD");
             pas[sp] = pas[sp] % 2;
             break;
            case 7:
+             strcpy(name,"MOD");
              sp --;
              pas[sp] %= pas[sp + 1];
              break;
            case 8:
+             strcpy(name,"EQL");
              sp --;
              pas[sp] = pas[sp] == pas[sp + 1];
              break;
            case 9:
+             strcpy(name,"NEQ");
              sp --;
              pas[sp] = pas[sp] != pas[sp + 1];
              break;
            case 10:
+             strcpy(name,"LSS");
              sp --;
-             pas[sp] = pas[sp] < pas[sp + 1];
+             pas[sp] = (pas[sp] < pas[sp + 1]);
              break;
            case 11:
+             strcpy(name,"LEQ");
              sp --;
              pas[sp] = pas[sp] <= pas[sp + 1];
              break;
            case 12:
+             strcpy(name,"GTR");
              sp --;
              pas[sp] = pas[sp] > pas[sp + 1];
              break;
            case 13:
+             strcpy(name,"GEQ");
              sp --;
              pas[sp] = pas[sp] >= pas[sp + 1];
              break;
@@ -131,20 +145,20 @@ printf("    %d    %d   %d\n",pc,bp,sp);
       case 3:
         strcpy(name,"LOD");
         sp++;
-        pas[sp] = pas[base(l) + m];
+        pas[sp] = pas[base(l,bp) + m];
         break;
       // 04 – STO L, M Store value at top of stack in the stack location at offset M
       // from L lexicographical levels down
       case 4:
         strcpy(name,"STO");
-        pas[base(l) + m] = pas[sp];
+        pas[base(l,bp) + m] = pas[sp];
         sp--;
         break;
       // 05 – CAL L, M Call procedure at code index M (generates new
       // Activation Record and PC <- M)
       case 5:
         strcpy(name,"CAL");
-        pas[sp + 1] = base(l); // static link (SL)
+        pas[sp + 1] = base(l,bp); // static link (SL)
         pas[sp + 2] = bp; // dynamic link (DL)
         pas[sp + 3] = pc; // return address (RA)
         bp = sp + 1;
@@ -164,8 +178,8 @@ printf("    %d    %d   %d\n",pc,bp,sp);
       // 08 – JPC 0, M Jump to instruction M if top stack element is 0
       case 8:
         strcpy(name,"JPC");
-        if (pas[sp] == 1)
-          pc = m;
+        if (pas[sp] == 0)
+          pc = m - 1;
         sp--;
         break;
       // 09 – SYS 0, 1 Write the top stack element to the screen
@@ -196,14 +210,13 @@ printf("    %d    %d   %d\n",pc,bp,sp);
   return 0;
 }
 
-int base(int L)
+int base(int L, int bp)
 {
-  int arb = bp; // arb = activation record base
-
+  int arb ; // arb = activation record base
   while (L > 0) //find base L levels down
   {
     /** BUG here "base" */
-    arb = pas[arb];
+    arb = pas[arb + 1];
     L--;
   }
   return arb;
