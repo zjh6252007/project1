@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 #define MAX_PAS_LEN 500
 
 // Instruction register.
