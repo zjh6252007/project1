@@ -34,6 +34,7 @@ int main(void)
 
   // Initialize bp, sp, pc.
   bp = index;
+  const int _bp = bp;
   sp = index-1;
   int old_sp = sp;
   int old_pc = pc;
@@ -52,7 +53,7 @@ printf("            %d    %d   %d\n",pc,bp,sp);
     old_sp = sp;
     for(int i = 0 ; i < stack ; i++)
     {
-      printf(" %2d",pas[bp + i]);
+      printf(" %2d",pas[_bp + i]);
     }
     printf("\n");
     // Execute
@@ -161,7 +162,7 @@ printf("            %d    %d   %d\n",pc,bp,sp);
       case 5:
         strcpy(name,"CAL");
         pas[sp + 1] = base(l,bp); // static link (SL)
-        pas[sp + 2] = pas[bp]; // dynamic link (DL)
+        pas[sp + 2] = bp; // dynamic link (DL)
         pas[sp + 3] = pc; // return address (RA)
         bp = sp + 1;
         pc = m;
