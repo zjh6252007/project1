@@ -172,7 +172,7 @@ printf("op: %d\n", op);
         return 0;
     }
   }
-
+  fclose(fp);
   return 0;
 }
 
