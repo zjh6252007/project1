@@ -145,7 +145,7 @@ printf("op: %d\n", op);
         break;
       // 08 – JPC 0, M Jump to instruction M if top stack element is 0
       case 8:
-        if (pas[sp] == 0)
+        if (pas[sp] == 1)
           pc = m;
         sp--;
         break;
