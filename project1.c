@@ -11,9 +11,10 @@ int m;
 int bp;
 int sp;
 int pc;
+int stack;
 char name[3];
 // Path array.
-int pas[MAX_PAS_LEN];
+int pas[MAX_PAS_LEN] = {-1};
 
 int base(int L);
 
@@ -25,6 +26,7 @@ int main(void)
 
   // Read the input to an array.
   int index = 0;
+  printf("    PC   BP   SP   stack\n");
   while (fscanf(fp, "%d", &pas[index]) == 1)
   {
     index++;
@@ -33,16 +35,24 @@ int main(void)
   // Initialize bp, sp, pc.
   bp = index;
   sp = index-1;
+  int old_sp = sp;
   pc = 0;
-
+printf("    %d    %d   %d\n",pc,bp,sp);
   while (halt == 1)
   {
     // Fetch
     op = pas[pc];
     l = pas[pc + 1];
     m = pas[pc + 2];
+    printf("%s:%d   %d   %d",name,pc,bp,sp);
     pc += 3;
-printf("op: %d\n", op);
+    stack += (sp - old_sp);
+    old_sp = sp;
+    for(int i = 0 ; i < stack ; i++) 
+    {
+      printf("   %d ",pas[bp + i]);// print the stack, debugging 
+    }
+    printf("\n");
     // Execute
     switch (op)
     {
@@ -149,7 +159,7 @@ printf("op: %d\n", op);
       // 07 – JMP 0, M Jump to instruction M (PC <- M)
       case 7:
         strcpy(name,"JMP");
-        pc = m;
+        pc = m ;
         break;
       // 08 – JPC 0, M Jump to instruction M if top stack element is 0
       case 8:
@@ -196,6 +206,5 @@ int base(int L)
     arb = pas[arb];
     L--;
   }
-
   return arb;
 }
