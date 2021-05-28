@@ -10,6 +10,7 @@ int m;
 int bp;
 int sp;
 int pc;
+char name[3];
 // Path array.
 int pas[MAX_PAS_LEN];
 
@@ -46,6 +47,7 @@ printf("op: %d\n", op);
     {
       // 01 – LIT 0, M Pushes a constant value (literal) M onto the stack
       case 1:
+        strcpy(name,"LIT");
         sp++;
         pas[sp] = m;
         break;
@@ -116,18 +118,21 @@ printf("op: %d\n", op);
       // 03 – LOD L, M Load value to top of stack from the stack location at
       // set M from L lexicographical levels down
       case 3:
+        strcpy(name,"LOD");
         sp++;
         pas[sp] = pas[base(l) + m];
         break;
       // 04 – STO L, M Store value at top of stack in the stack location at offset M
       // from L lexicographical levels down
       case 4:
+        strcpy(name,"STO");
         pas[base(l) + m] = pas[sp];
         sp--;
         break;
       // 05 – CAL L, M Call procedure at code index M (generates new
       // Activation Record and PC <- M)
       case 5:
+        strcpy(name,"CAL");
         pas[sp + 1] = base(l); // static link (SL)
         pas[sp + 2] = bp; // dynamic link (DL)
         pas[sp + 3] = pc; // return address (RA)
@@ -137,14 +142,17 @@ printf("op: %d\n", op);
       // 06 – INC 0, M Allocate M memory words (increment SP by M). First four
       // are reserved to Static Link (SL), Dynamic Link (DL), Return Address (RA), and Parameter (P)
       case 6:
+        strcpy(name,"INC");
         sp += m;
         break;
       // 07 – JMP 0, M Jump to instruction M (PC <- M)
       case 7:
+        strcpy(name,"JMP");
         pc = m;
         break;
       // 08 – JPC 0, M Jump to instruction M if top stack element is 0
       case 8:
+        strcpy(name,"JPC");
         if (pas[sp] == 1)
           pc = m;
         sp--;
@@ -153,6 +161,7 @@ printf("op: %d\n", op);
       //      SYS 0, 2 Read in input from the user and store it on top of the stack
       //      SYS 0, 3 End of program (Set Halt flag to zero)
       case 9:
+        strcpy(name,"SYS");
         if (m == 1)
         {
           printf("Output result is: %d\n", pas[sp]);
